@@ -3,11 +3,12 @@ const dotenv = require("dotenv");
 
 // Load .env from this folder, no matter where the command is run from
 const envPath = path.resolve(__dirname, ".env");
-const result = dotenv.config({ path: envPath });
-if (result.error) {
-  console.error("❌ Could not load .env:", result.error.message);
-  console.error("   Expected it at:", envPath);
-  process.exit(1);
+const fs = require("fs");
+const path = require("path");
+
+const envPath = path.join(__dirname, ".env");
+if (fs.existsSync(envPath)) {
+  require("dotenv").config({ path: envPath }); // sirf local ke liye
 }
 
 const express = require("express");
