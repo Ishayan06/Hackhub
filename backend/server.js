@@ -1,14 +1,12 @@
 const path = require("path");
+const fs = require("fs");
 const dotenv = require("dotenv");
 
-// Load .env from this folder, no matter where the command is run from
+// Local dev: load backend/.env if it exists.
+// On Render there is no .env file, the dashboard Environment Variables are used instead.
 const envPath = path.resolve(__dirname, ".env");
-const fs = require("fs");
-const path = require("path");
-
-const envPath = path.join(__dirname, ".env");
 if (fs.existsSync(envPath)) {
-  require("dotenv").config({ path: envPath }); // sirf local ke liye
+  dotenv.config({ path: envPath });
 }
 
 const express = require("express");
@@ -18,11 +16,11 @@ const connectDB = require("./config/db");
 const { notFound, errorHandler } = require("./middleware/error");
 
 if (!process.env.JWT_SECRET) {
-  console.error("❌ JWT_SECRET is empty or missing in .env (check spelling and UTF-8 encoding).");
+  console.error("❌ JWT_SECRET is missing. Set it in .env (local) or in the Environment Variables (Render).");
   process.exit(1);
 }
 if (!process.env.MONGO_URI) {
-  console.error("❌ MONGO_URI is empty or missing in .env");
+  console.error("❌ MONGO_URI is missing. Set it in .env (local) or in the Environment Variables (Render).");
   process.exit(1);
 }
 
@@ -47,7 +45,7 @@ const PORT = process.env.PORT || 5000;
 
 connectDB()
   .then(() => {
-    app.listen(PORT, () => console.log(`🚀 API running on http://localhost:${PORT}`));
+    app.listen(PORT, () => console.log(`🚀 API running on port ${PORT}`));
   })
   .catch((err) => {
     console.error("❌ MongoDB connection failed:", err.message);
