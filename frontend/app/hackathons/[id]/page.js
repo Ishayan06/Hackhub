@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import StatusBadge from "@/components/StatusBadge";
 import TeamPanel from "@/components/TeamPanel";
 import { api, fmtDate, statusOf } from "@/lib/api";
+import CertificateButton from "@/components/CertificateButton";
 
 /* ---------- Participant: submit project ---------- */
 function SubmissionForm({ hackathon, existing, onSaved }) {
@@ -314,6 +315,15 @@ export default function HackathonDetail() {
               <Link href="/join" className="btn block">Enter join code</Link>
             </div>
           )}
+          {isParticipant && data.isJoined && statusOf(data) === "ended" && (
+  <div className="card">
+    <h3>Certificate</h3>
+    <p className="desc" style={{ margin: "6px 0 14px", WebkitLineClamp: "unset" }}>
+      Thanks for participating! Download your certificate of participation.
+    </p>
+    <CertificateButton name={user.name} hackathon={data} />
+  </div>
+)}
           {isParticipant && data.isJoined && (
             <button className="btn danger" onClick={leave}>Leave hackathon</button>
           )}
