@@ -5,7 +5,11 @@ const hackathonSchema = new mongoose.Schema(
     title: { type: String, required: true, trim: true, maxlength: 120 },
     description: { type: String, required: true, maxlength: 4000 },
     theme: { type: String, trim: true, default: "Open Innovation" },
-    mode: { type: String, enum: ["online", "offline", "hybrid"], default: "online" },
+    mode: {
+      type: String,
+      enum: ["online", "offline", "hybrid"],
+      default: "online",
+    },
     location: { type: String, trim: true, default: "" },
     prize: { type: String, trim: true, default: "" },
     tags: [{ type: String, trim: true }],
@@ -16,7 +20,50 @@ const hackathonSchema = new mongoose.Schema(
     maxTeamSize: { type: Number, default: 4, min: 1 },
     // Participants join privately using this code
     joinCode: { type: String, required: true, unique: true, uppercase: true },
-    maker: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    // AI judging
+    aiJudging: { type: Boolean, default: false},
+    judgingStatus: {
+      type: String,
+      enum: ["OPEN", "JUDGING", "RESULTS_READY", "PUBLISHED"],
+      default: "OPEN",
+    },
+    rubric: {
+      type: [
+        {
+          name: { type: String, required: true },
+          weight: { type: Number, required: true }, // total 100
+          description: { type: String, default: "" },
+        },
+      ],
+      default: [
+        {
+          name: "Innovation",
+          weight: 25,
+          description: "Originality of the idea",
+        },
+        {
+          name: "Technical Complexity",
+          weight: 25,
+          description: "Depth of implementation",
+        },
+        {
+          name: "Completeness",
+          weight: 20,
+          description: "Working demo, features done",
+        },
+        {
+          name: "Problem-Solution Fit",
+          weight: 20,
+          description: "Solves a real problem",
+        },
+        { name: "UI/UX", weight: 10, description: "Usability and design" },
+      ],
+    },
+    maker: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     participants: [
       {
         user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -24,7 +71,7 @@ const hackathonSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // maxTeamSize must never be smaller than minTeamSize

@@ -37,6 +37,7 @@ app.get("/api/health", (req, res) =>
 );
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/hackathons", require("./routes/hackathonRoutes"));
+app.use("/api/hackathons", require("./routes/judgingRoutes")); // ADDED
 app.use("/api", require("./routes/teamRoutes"));
 app.use(notFound);
 app.use(errorHandler);
@@ -45,6 +46,7 @@ const PORT = process.env.PORT || 5000;
 
 connectDB()
   .then(() => {
+    require("./jobs/deadlineJob"); // ADDED (DB connect hone ke baad hi start hoga)
     app.listen(PORT, () => console.log(`🚀 API running on port ${PORT}`));
   })
   .catch((err) => {

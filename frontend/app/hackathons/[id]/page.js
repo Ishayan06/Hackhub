@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import StatusBadge from "@/components/StatusBadge";
 import TeamPanel from "@/components/TeamPanel";
 import { api, fmtDate, statusOf } from "@/lib/api";
+import ResultsPanel from "@/components/ResultsPanel";
 import CertificateButton from "@/components/CertificateButton";
 
 /* ---------- Participant: submit project ---------- */
@@ -217,7 +218,9 @@ export default function HackathonDetail() {
               )}
             </>
           )}
-
+{statusOf(data) === "ended" && (data.isOwner || data.isJoined) && !data.isOwner && (
+  <ResultsPanel hackathonId={id} />
+)}
           {/* Participant (joined): team + my submission */}
           {isParticipant && data.isJoined && (
             <>
@@ -273,6 +276,7 @@ export default function HackathonDetail() {
           {/* Owner panel */}
           {data.isOwner && (
             <>
+            <Link href={`/hackathons/${id}/judging`} className="btn block">AI Judging</Link>
               <div className="card">
                 <h3>Join code</h3>
                 <p className="desc" style={{ WebkitLineClamp: "unset" }}>Share this with people you want to let in.</p>
