@@ -104,7 +104,7 @@ function Row({ r, hackathonId, onChanged }) {
                 Clear
               </button>
             )}
-            {(r.status === "NEEDS_MANUAL_REVIEW" || r.status === "DONE") && (
+            {(r.status === "NEEDS_MANUAL_REVIEW" || r.status === "DONE" || r.error) && (
               <button className="btn small secondary" disabled={busy} onClick={() => call("/retry", "POST")}>
                 Re-run AI
               </button>
